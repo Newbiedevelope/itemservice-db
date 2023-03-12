@@ -61,7 +61,7 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
 
     @Override
     public Optional<Item> findById(Long id) {
-        String sql = "select id, item_name, price, quantity from item where id=?";
+        String sql = "select id, item_name, price, quantity from item where id=:id";
 
         try {
             Map<String, Object> param = Map.of("id", id);
@@ -88,7 +88,7 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
 
         boolean andFlag = false;
         if (StringUtils.hasText(itemName)) {
-            sql += " item_name like concat('%',?,'%')";
+            sql += " item_name like concat('%',:itemName,'%')";
             andFlag = true;
         }
 
@@ -96,7 +96,7 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
             if (andFlag) {
                 sql += " and";
             }
-            sql += " price <= ?";
+            sql += " price <= :maxPrice";
         }
 
         log.info("sql={}", sql);
